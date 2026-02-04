@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "553239732400",
+    "project_id": "hiresense-a1827",
+    "storage_bucket": "hiresense-a1827.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553239732400:android:3cd07971fbcbdf1a385b75",
+        "android_client_info": {
+          "package_name": "com.example.hiresense"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553239732400-mscl5t5i01gs2sveldkas96smahk7k0u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hiresense",
+            "certificate_hash": "09b10085481dadee75b380f18181db7a0c2b8888"
+          }
+        },
+        {
+          "client_id": "553239732400-aa2lg5fe8mei4c31p6e6bei9kuvdq3o2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATegJJSXHLw2H47BRDa2Mg01uqXrerTG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553239732400-78lisu23hdvf10smh9oa1v5hp4csh73j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "553239732400-chbijqs749g60ac00nnh7teprv5pup1j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hiresense"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
