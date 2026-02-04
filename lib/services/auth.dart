@@ -1,12 +1,15 @@
+// "553239732400-78lisu23hdvf10smh9oa1v5hp4csh73j.apps.googleusercontent.com",
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /*
 AuthService handles Google Sign-In with Firebase.
 
 Setup Steps:
 1. Add dependencies in pubspec.yaml:
-   firebase_auth, google_sign_in, firebase_core
+   firebase_auth, google_sign_in, firebase_core, cloud_firestore
 
 2. In Firebase Console:
    - Enable Google as an authentication provider.
@@ -28,30 +31,45 @@ Setup Steps:
 class AuthService {
   final _firebaseAuth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn.instance;
+  final _firestore = FirebaseFirestore.instance;
 
   /*
   Signs in the user using Google and returns a Firebase UserCredential.
-  Returns null if the user cancels or an error occurs.
+  If the user is new, writes their data to Firestore in 'users' collection.
   */
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle({required bool isRecruiter}) async {
     try {
-      // Initialize Google Sign-In with your server client ID
       await _googleSignIn.initialize(
         serverClientId:
             "553239732400-78lisu23hdvf10smh9oa1v5hp4csh73j.apps.googleusercontent.com",
       );
 
-      // Prompt user to pick a Google account
       final account = await _googleSignIn.authenticate();
 
-      // Get authentication tokens
       final auth = account.authentication;
 
-      // Create a Firebase credential
       final cred = GoogleAuthProvider.credential(idToken: auth.idToken);
 
-      // Sign in to Firebase
-      return await _firebaseAuth.signInWithCredential(cred);
+      final userCredential = await _firebaseAuth.signInWithCredential(cred);
+      final user = userCredential.user;
+      if (user == null) return null;
+
+      // Write user data to Firestore
+      final userRef = _firestore.collection('users').doc(user.uid);
+
+      // Only create if it doesn't exist yet
+      final doc = await userRef.get();
+      if (!doc.exists) {
+        await userRef.set({
+          'uid': user.uid,
+          'name': user.displayName,
+          'email': user.email,
+          'role': isRecruiter ? 'recruiter' : 'hiring_manager',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      return userCredential;
     } catch (e) {
       print("Google sign in failed: ${e.toString()}");
       return null;

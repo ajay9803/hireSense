@@ -211,11 +211,16 @@ class _LoginPageState extends State<LoginPage> {
                               GestureDetector(
                                 onTap: () async {
                                   final userCredential = await AuthService()
-                                      .signInWithGoogle();
+                                      .signInWithGoogle(
+                                        isRecruiter: isRecruiter,
+                                      );
                                   if (userCredential != null) {
                                     final user = userCredential.user;
                                     print("Signed in as: ${user?.displayName}");
                                     print("Email: ${user?.email}");
+                                    print(
+                                      "Role: ${isRecruiter ? "Recruiter" : "Hiring Manager"}",
+                                    );
                                   } else {
                                     print("Sign-in failed or was cancelled");
                                   }
