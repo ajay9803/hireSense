@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
-  static const routename = '/splash';
   const SplashPage({super.key});
 
   @override
@@ -23,17 +22,14 @@ class _SplashPageState extends State<SplashPage>
       duration: const Duration(seconds: 8),
     )..repeat();
 
-    // Navigate after 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
 
       final user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // User is logged in → go to home
         Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
-        // User not logged in → go to login
         Navigator.pushReplacementNamed(context, '/login');
       }
     });
@@ -48,20 +44,22 @@ class _SplashPageState extends State<SplashPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [_animatedBackground(), _gridOverlay(), _content()],
+      backgroundColor: const Color(0xFFF7FAFF),
+      body: SafeArea(
+        child: Stack(
+          children: [_animatedBackground(), _gridOverlay(), _content()],
+        ),
       ),
     );
   }
 
-  // ---------------- ANIMATED BACKGROUND ----------------
+  // ---------------- BACKGROUND ----------------
 
   Widget _animatedBackground() {
     return AnimatedBuilder(
       animation: _controller,
       builder: (_, __) {
         final t = _controller.value * 2 * math.pi;
-
         final alignment = Alignment(0.6 * math.cos(t), 0.6 * math.sin(t));
 
         return Container(
@@ -70,9 +68,9 @@ class _SplashPageState extends State<SplashPage>
               center: alignment,
               radius: 1.4,
               colors: const [
-                Color(0xFF0B1D3A),
-                Color(0xFF050B16),
-                Color(0xFF020409),
+                Color(0xFFEAF2FF),
+                Color(0xFFF7FAFF),
+                Colors.white,
               ],
             ),
           ),
@@ -94,49 +92,36 @@ class _SplashPageState extends State<SplashPage>
       child: Column(
         children: [
           const Spacer(),
-
           _glassLogo(),
-
           const SizedBox(height: 36),
-
           _title(),
-
           const SizedBox(height: 14),
-
           _subtitle(),
-
           const SizedBox(height: 24),
-
           _tagline(),
-
           const Spacer(),
-
           _loading(),
-
           const SizedBox(height: 28),
-
           _footer(),
-
           const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  // ---------------- GLASS LOGO ----------------
+  // ---------------- LOGO ----------------
 
   Widget _glassLogo() {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Glow
         Container(
           width: 160,
           height: 160,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: RadialGradient(
-              colors: [Colors.blueAccent.withOpacity(0.35), Colors.transparent],
+              colors: [Colors.blue.withOpacity(0.18), Colors.transparent],
             ),
           ),
         ),
@@ -144,23 +129,23 @@ class _SplashPageState extends State<SplashPage>
         ClipRRect(
           borderRadius: BorderRadius.circular(28),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
             child: Container(
               width: 96,
               height: 96,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withOpacity(0.6),
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: Colors.white.withOpacity(0.25)),
+                border: Border.all(color: Colors.white),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blueAccent.withOpacity(0.25),
-                    blurRadius: 24,
+                    color: Colors.blue.withOpacity(0.2),
+                    blurRadius: 20,
                     spreadRadius: 4,
                   ),
                 ],
               ),
-              child: const Icon(Icons.hub, color: Colors.white, size: 38),
+              child: const Icon(Icons.hub, color: Color(0xFF2563EB), size: 38),
             ),
           ),
         ),
@@ -180,7 +165,7 @@ class _SplashPageState extends State<SplashPage>
               fontSize: 28,
               letterSpacing: 3,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: Color(0xFF1E293B),
             ),
           ),
           TextSpan(
@@ -189,7 +174,7 @@ class _SplashPageState extends State<SplashPage>
               fontSize: 28,
               letterSpacing: 3,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF3B82F6),
+              color: Color(0xFF2563EB),
             ),
           ),
         ],
@@ -200,14 +185,18 @@ class _SplashPageState extends State<SplashPage>
   Widget _subtitle() {
     return const Text(
       "AI-POWERED TALENT MATCHING",
-      style: TextStyle(fontSize: 11, letterSpacing: 2, color: Colors.white70),
+      style: TextStyle(
+        fontSize: 11,
+        letterSpacing: 2,
+        color: Color(0xFF64748B),
+      ),
     );
   }
 
   Widget _tagline() {
     return const Text(
       "Match the perfect CV. Faster. Smarter.",
-      style: TextStyle(fontSize: 12, color: Colors.white38),
+      style: TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
     );
   }
 
@@ -221,7 +210,7 @@ class _SplashPageState extends State<SplashPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(3, (i) {
             final opacity = (1 - (_controller.value - i * 0.3).abs()).clamp(
-              0.2,
+              0.3,
               1.0,
             );
 
@@ -230,7 +219,7 @@ class _SplashPageState extends State<SplashPage>
               width: 6,
               height: 6,
               decoration: BoxDecoration(
-                color: Colors.blueAccent.withOpacity(opacity),
+                color: Colors.blue.withOpacity(opacity),
                 shape: BoxShape.circle,
               ),
             );
@@ -250,13 +239,13 @@ class _SplashPageState extends State<SplashPage>
           style: TextStyle(
             fontSize: 10,
             letterSpacing: 2,
-            color: Colors.white24,
+            color: Color(0xFFCBD5E1),
           ),
         ),
         SizedBox(height: 10),
         Text(
           "v1.0.0 • ENTERPRISE AI",
-          style: TextStyle(fontSize: 10, color: Colors.white24),
+          style: TextStyle(fontSize: 10, color: Color(0xFFCBD5E1)),
         ),
       ],
     );
@@ -269,7 +258,7 @@ class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.04)
+      ..color = Colors.black.withOpacity(0.1)
       ..strokeWidth = 1;
 
     const spacing = 36.0;

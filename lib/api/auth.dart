@@ -42,8 +42,7 @@ class AuthService {
 
       return userCredential;
     } catch (e) {
-      print("Google sign in failed: $e");
-      return null;
+      throw e.toString();
     }
   }
 
@@ -95,9 +94,11 @@ class AuthService {
         email: email,
         password: password,
       );
+    } on FirebaseAuthException catch (e) {
+      // Throw the Firebase error message
+      throw e.message ?? "An unknown error occurred";
     } catch (e) {
-      print("Email sign-in failed: $e");
-      return null;
+      throw e.toString();
     }
   }
 

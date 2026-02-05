@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  static const routename = '/login';
   const LoginPage({super.key});
 
   @override
@@ -39,15 +38,28 @@ class _LoginPageState extends State<LoginPage> {
 
       final user = userCredential!.user;
       if (user != null) {
-        print("Signed in as: ${user.displayName ?? user.email}");
-        print("Role: ${isRecruiter ? "Recruiter" : "Hiring Manager"}");
+        final refreshedUser = FirebaseAuth.instance.currentUser;
+        if (refreshedUser!.emailVerified) {
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        } else {
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, "/verify");
+        }
       }
     } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.message ?? "Sign-in failed"),
           backgroundColor: Colors.red,
         ),
+      );
+    } catch (e) {
+      setState(() => _loading = false);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
     } finally {
       setState(() => _loading = false);
@@ -261,6 +273,7 @@ class _LoginPageState extends State<LoginPage> {
                                               child:
                                                   const CircularProgressIndicator(
                                                     color: Colors.white,
+                                                    strokeWidth: 2,
                                                   ),
                                             )
                                           : const Text(
@@ -311,14 +324,12 @@ class _LoginPageState extends State<LoginPage> {
                                                 .signInWithGoogle(
                                                   isRecruiter: isRecruiter,
                                                 );
+
                                         if (userCredential != null) {
-                                          final user = userCredential.user;
-                                          print(
-                                            "Signed in as: ${user?.displayName}",
-                                          );
-                                          print("Email: ${user?.email}");
-                                          print(
-                                            "Role: ${isRecruiter ? "Recruiter" : "Hiring Manager"}",
+                                          if (!mounted) return;
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            '/dashboard',
                                           );
                                         }
                                       },

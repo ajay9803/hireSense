@@ -47,6 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
         );
         Navigator.pushReplacementNamed(context, "/verify");
       } else {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Signup failed. Try again."),
@@ -56,6 +57,7 @@ class _SignUpPageState extends State<SignUpPage> {
       }
     } catch (e) {
       setState(() => loading = false);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
