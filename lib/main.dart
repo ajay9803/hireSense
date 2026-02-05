@@ -1,6 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hiresense/presentation/pages/dashboard.dart';
 import 'package:hiresense/presentation/pages/login.dart';
+import 'package:hiresense/presentation/pages/signup.dart';
+import 'package:hiresense/presentation/pages/splash.dart';
+import 'package:hiresense/presentation/pages/verify_email.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +22,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: LoginPage(),
+      home: SplashPage(),
+      routes: {
+        "/login": (_) => const LoginPage(),
+        "/signup": (_) => const SignUpPage(),
+        "/verify": (_) => const EmailVerificationPage(),
+        "/dashboard": (_) => const DashboardPage(),
+      },
     );
   }
 }
